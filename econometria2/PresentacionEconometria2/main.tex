@@ -1,0 +1,178 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Madrid}       
+  \usecolortheme{default} 
+  \usefonttheme{serif}    
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{chemfig}
+\usepackage[version=3]{mhchem}
+
+
+\usepackage{pgfpages}
+\pgfpagesuselayout{resize to}[%
+  physical paper width=8in, physical paper height=6in]
+
+
+\title{Econometr\'ia II}
+\author{Rosario Vi}
+\institute{Facultad de Ciencias Econ\'omicas, UBA.}
+\date{ }
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}{Temas}
+  \tableofcontents
+\end{frame}
+
+\section{Modelo lineal y estimaci\'on por MCO.}
+
+\begin{frame}{Modelo lineal.}
+
+Se tiene el siguiente modelo poblacional:
+\begin{equation}
+    y_i = \beta_0 + \beta_1 x_1i  +...+ \beta_k x_ki + u_i
+\end{equation}
+
+\begin{itemize}
+  \item Se asume linealidad en los par\'ametros.
+  \item Es un modelo estructural si:
+  \begin{itemize}
+      \item $ E[y_i/x_1i;...;x_k]=\beta_0 + \beta_1x_1i+...+\beta_k x_ki $
+      \item $E[u_i/x_ij]=0$
+ \end{itemize}
+ \item Cuando los parámetros son lineales, la proyecci\'on ortogonal es igual a la esperanza condicional.
+ \item Si el modelo estructural no se puede estimar directamente, se necesitan de algunos supuestos y \'algebra para llegar a una forma estimable.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Estimaci\'on por MCO}
+\begin{itemize}
+    \item Interesa estimar $ \Vec{\beta} \in \mathbb{R}^{kx1}$
+    \item Para que el método MCO de estimadores consistentes se necesita:
+    \begin{itemize}
+        \item $E[U_i]=0$
+        \item $Cov(U_i ; X_{ij})=0  j=1;\dotsc;k$
+        \item Ningún regresor en combinaci\'on lineal de los otros.
+    \end{itemize}
+   \item Que el estimador sea consistente significa que:
+   $Plim \hat{\beta_j}=\beta_j$
+   \item Bajo estos supuestos, MCO devuelve estimadores consistentes de la esperanza condicional.
+\end{itemize}
+
+\end{frame}
+
+\section{Problema de la endogeneidad}
+
+\begin{frame}[fragile]
+\frametitle{Problema de la endogeneidad}
+
+\begin{itemize}
+\item Endogeneidad: Cuando una variable explicativa $x_{j}$ esta correlacionada con el error $U_i$. 
+\item Se confunde la parte sistem\'atica con la no sistem\'atica.
+\item Los estimadores del modelo end\'ogeno no son consistentes.
+\item Causas:
+\begin{itemize}
+    \item Variables omitidas.
+    \item Errores de medici\'on.
+    \item Simultaneidad.
+\end{itemize}
+\item Solución:
+\begin{itemize}
+    \item Variables proxy
+    \item Variables instrumentales
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Variable Omitida}
+Se considera el modelo:
+\begin{equation}
+     y_i = \beta_0 + \beta_1 x_1i  +...+ \beta_k x_ki+\gamma q_i + v_i
+\end{equation}
+Donde $q_i$ es una variable inobservable pero relevante del problema.
+Con la proyección de $q_i$ con las otras variables explicativas y reemplazando en (2) se tiene:
+\begin{equation}
+     y_i = (\beta_0+\gamma\delta_0) + (\beta_1+\gamma\delta_1) x_1i  +...+ (\beta_k+\gamma\delta_k) x_ki+ (v_i+\gamma r_i)
+\end{equation}
+\begin{itemize}
+    \item Si $\Rho(x_{ji};q_i)=0 \implies$ el ejefcto es captado por el error y no hay problema.
+    \item Si $\Rho(x_{ji};q_i) \neq 0 \implies$ hay un problema de endogeneidad.
+\end{itemize}
+\end{frame}
+
+
+
+\section{Soluci\'on}
+\subsection{Variables Proxy}
+\begin{frame}[fragile]
+\frametitle{Soluci\'on: variables proxy}
+Buscar una variable medible $z$ que se aproxime a la variable inobservable $q$.
+Debe cumplir dos condiciones:
+\begin{itemize}
+    \item Redundancia:$E(y_i|x_1;\dotsc;x_{ki};z_i;q_i)=E(y_i|x_{1i};\dotsc;x_{ki};q_i)$
+    \item Cuando $q_i$ se controla por $z_i$ entonces se anula las correlaciones parciales entre $q_i$ y $x_{ji}$: $P(q_i|x_{1i};\dotsc;x_{ki};z_i)=P(q_i|z_i)$
+\end{itemize}
+Tomando la segunda condici\'on y reemplazando en el modelo (2):
+\begin{equation}
+     y_i = (\beta_0+\gamma\sigma_0) + \beta_1 x_{1i}+\dotsc+ \beta_k x_{ki}+\gamma\sigma_1z+(v_i+\gamma r_i)
+\end{equation}
+\end{frame}
+
+\begin{frame}{Soluci\'on: variables proxy. Resultados.}
+\begin{enumerate}
+ \item $Cov(z_i;r_i)=0 ; Cov(x_{ji};r_i)=0  \forall j=1;\dotsc;k$ pero $E(r_i) \neq 0$\\
+ Caso similar al ideal donde $E((v_i+\gamma r_i)=0$ pero difiere en una constante que es captada por el intercepto.
+ \item $Cov(z_i;r_i)=0; E(r_i)=0$ pero $Cov(x_{ji};r_i)=0  \forall j=1;\dotsc;k-1$//
+ No se cumple la segunda condici\'on para las variables proxy. Se dice que es una proxy imperfecta. La estimaci\'on por MCO es inconsistente. Si el sesgo asint\'otico es pequeño puede ser conveniente usar $z_i$. No es conveniente en caso de multicolinealidad. Incluir $z_i$ reduce la varianza.
+ \item $Cov(z_i;r_i)=0 ; Cov(x_{ji};r_i)=0  \forall j=1;\dotsc;k$ pero $Cov(z_i;(\gammar_i+v_i)) \neq 0$//
+ Entnces $Cov(z_i;v_i) \neq 0$. No se cumple la primera condición. $z_i$ afecta a $y_i$ por medio de $v_i$. Sigue habiendo endogeneidad.
+\end{enumerate}
+    \end{frame}
+
+\begin{frame}{Soluci\'on: variables proxy. Resultados.}
+Para el modelo:
+\begin{equation}
+    logWage_i= \beta_0+\beta_1educ_i+\beta_2habil_i+ v _i
+\end{equation}
+Donde $habil_i$ es inobservable. Se propone como aproximaci\'on $IQ$ y se tiene la forma reducida:
+\begin{equation}
+    habil_i=\sigma_0 + \sigma_1IQ+ r_i
+\end{equation}
+Si $IQ$ capta efectos no observables como es el cansancion, y estos est\'an correlacionados con $r_i$ entonces va a haber problema de endogeneidad en la forma reducida (6) que se traslada a la forma (5), por lo que no va a ser una buena proxy.\\
+Si los efectos no observables como el cansancio están correlacionados con $v_i$ entonces no se soluciona el problema de endogeneidad de (5) y los esimadores no van a ser consistentes.
+\end{frame}
+
+\subsection{Variables Instrumentales}
+\begin{frame}{Soluci\'on: variables instrumentales}
+Es un m\'etodo que da una soluci\'on general al problema de variables explicativas end\'ogenas.\\
+Partiendo de la ecuaci\'on (1), se asume una $x_j$ end\'ogena. Se propone $z$ como instrumento. Tiene que cumplir dos condiciones:
+\begin{itemize}
+    \item $E(y_i|x_{1i};\dots;x_{ki};z_i)=E(y_i|x_{1i};\dotsc;x_{ki})$
+    \item $P(x_{ki}|x_{1i};\dotsc;x_{k-1i};z_i)=\delta_0+\delta_1x_{1i}+\dots+\delta_{k-1}k_{k-1i}+\sigma z + r_k$
+\end{itemize}
+Reemplazando la forma reducida en (1) se tiene:
+\begin{equation}
+   y_i= \alpha_0+\alpha_1x_{1i}+\dots+\alpha_{k-1}k_{k-1i}+\lambda z + e
+\end{equation}
+En la expresi\'on (7) los par\'ametros que se esiman por MCO son consistentes.
+Como $z$ es una fuente de variabilidad ex\'ogena, se busca atribuir los movimientos de $y$ a cambios ex\'ogenos en $x$ por medio de variaciones de $z$.
+\end{frame}
+
+
+
+\end{document}
