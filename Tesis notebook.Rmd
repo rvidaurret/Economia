@@ -1,0 +1,106 @@
+---
+title: "Tesis"
+output: html_document
+---
+
+```{r}
+install.packages("readxl")
+```
+
+```{r}
+library("readxl")
+library("zoo")
+library(ggplot2)
+```
+
+```{r}
+series <- read_excel("C:\\Users\\Rosario\\Desktop\\Tesis\\Tesis. Series trimestrales 1993-2021.xlsx",sheet = "Series Listas") 
+```
+
+##Creo variables
+
+```{r}
+tiempo <- series$Tiempo
+pib <- series$`PIB 2004`
+ibif <- series$`IBIF 2004`
+ipc <- series$`IPC Base 2016`
+```
+
+````{r}
+tiempo <- as.yearqtr(format(tiempo), "%Y - %q")
+head(tiempo)
+str(tiempo)
+```
+```{r}
+log_pib <- log(pib)
+log_ibif <- log(ibif)
+log_ipc <- log(ipc)
+```
+
+
+#Grafico las series
+
+```{r}
+ggplot() + 
+  geom_line(data = series, aes(x = tiempo, y = log_pib, colour ="log pib")) +
+  xlab('tiempo') +
+  ylab('En ln') +
+  labs(color=" ")
+
+ggplot() +
+  geom_line(data = series, aes(x = tiempo, y = log_ibif, colour ="log ibif")) +
+  xlab('tiempo') +
+  ylab('En ln') +
+  labs(color=" ")
+
+ggplot() +
+  geom_line(data = series, aes(x = tiempo, y = log_ipc, colour = "log ipc")) +
+  xlab('tiempo') +
+  ylab('En ln') +
+  labs(color=" ")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
